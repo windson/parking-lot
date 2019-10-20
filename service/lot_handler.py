@@ -61,5 +61,5 @@ class LotHandler(object):
         slots = []
         for slot in self.slots:
             if slot.ParkedCar != None:
-                if solt.ParkedCar.Color == color:
+                if slot.ParkedCar.Color == color:
                     slots.append(slot.SlotNum)
