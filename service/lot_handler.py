@@ -56,10 +56,34 @@ class LotHandler(object):
         return slotNum in self.freeSlots
 
     
-    def GetSlotNumsByClor(self, color):
-        #slot_numbers_for_cars_with_colour
+    def GetSlotNumsByColor(self, color):
+        # slot_numbers_for_cars_with_colour
         slots = []
         for slot in self.slots:
             if slot.ParkedCar != None:
-                if slot.ParkedCar.Color == color:
+                if str(slot.ParkedCar.Color).lower() == color.lower():
                     slots.append(slot.SlotNum)
+        
+        return slots
+
+    def GetSlotNumByRegNum(self, regNum):
+        # slot_number_for_registration_number
+        slotNum = 'Not Found'
+        for slot in self.slots:
+            if slot.ParkedCar != None:
+                if str(slot.ParkedCar.RegNum).lower() == regNum.lower():
+                    slotNum = str(slot.SlotNum)
+                    break
+        
+        return slotNum
+
+    def GetRegNumsByColor(self, color):
+        # registration_numbers_for_cars_with_colour
+        regNums = []
+        for slot in self.slots:
+            if slot.ParkedCar != None:
+                if str(slot.ParkedCar.Color).lower() == color.lower():
+                    regNums.append(str(slot.ParkedCar.RegNum))
+        
+        return regNums
+        

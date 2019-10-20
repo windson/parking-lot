@@ -26,8 +26,6 @@ class test_lot_handler(unittest.TestCase):
         self.assertEqual('No Such Slot Number foudn in Parking Lot', str(ex.exception))
         
         
-
-    
     def test_fill_slot(self):
         # Arrange
         lh = LotHandler(2)
@@ -95,4 +93,81 @@ class test_lot_handler(unittest.TestCase):
         # Assert
         self.assertFalse(lh.IsSlotAvailable(filledSlot.SlotNum))
         self.assertTrue(lh.IsSlotAvailable(2))
+
+    def test_get_slot_nums_by_color(self):
+        # Arrange
+        lh = LotHandler(4)
+        car1 = Car('KA-01-HH-1234', 'White')
+        car2 = Car('KA-04-HH-1231', 'Blue')
+        car3 = Car('KA-08-HH-1111', 'Red')
+        car4 = Car('KA-02-HH-9999', 'Blue')
+
+        lh.FillSlot(car1, 1)
+        lh.FillSlot(car2, 2)
+        lh.FillSlot(car3, 3)
+        lh.FillSlot(car4, 4)
+
+        expectedBlueSlots = [2,4]
+        expectedRedslots = [3]
         
+
+        # Act
+        actualBlueSlots = lh.GetSlotNumsByColor('Blue')
+        actualRedSlots =  lh.GetSlotNumsByColor('Red')
+        actualYellowSlots = lh.GetSlotNumsByColor('Yellow')
+        # Assert
+        self.assertEqual(expectedBlueSlots,actualBlueSlots)
+        self.assertEqual(expectedRedslots,actualRedSlots)
+        self.assertEqual([],actualYellowSlots)
+
+    def test_get_slot_num_by_reg_num(self):
+        # Arrange
+        lh = LotHandler(4)
+        car1 = Car('KA-01-HH-1234', 'White')
+        car2 = Car('KA-04-HH-1231', 'Blue')
+        car3 = Car('KA-08-HH-1111', 'Red')
+        car4 = Car('KA-02-HH-9999', 'Blue')
+
+        lh.FillSlot(car1, 1)
+        lh.FillSlot(car2, 2)
+        lh.FillSlot(car3, 3)
+        lh.FillSlot(car4, 4)
+
+        expectedSlotNum = '2'
+        
+        
+
+        # Act
+        actualSlotNum = lh.GetSlotNumByRegNum('KA-04-HH-1231')
+        actualNotFound =  lh.GetSlotNumByRegNum('KA-04-HH-3333')
+        
+        # Assert
+        self.assertEqual(expectedSlotNum,actualSlotNum)
+        self.assertEqual('Not Found',actualNotFound)
+
+
+    def test_get_reg_nums_by_color(self):
+        # Arrange
+        lh = LotHandler(4)
+        car1 = Car('KA-01-HH-1234', 'White')
+        car2 = Car('KA-04-HH-1231', 'Blue')
+        car3 = Car('KA-04-HH-1231', 'Red')
+        car4 = Car('KA-04-HH-1231', 'Blue')
+
+        lh.FillSlot(car1, 1)
+        lh.FillSlot(car2, 2)
+        lh.FillSlot(car3, 3)
+        lh.FillSlot(car4, 4)
+
+        expectedBlueRegNums = ['KA-04-HH-1231', 'KA-04-HH-1231']
+        expectedRedRegNums = ['KA-04-HH-1231']
+        
+
+        # Act
+        actualBlueRegNums = lh.GetRegNumsByColor('Blue')
+        actualRedRegNums =  lh.GetRegNumsByColor('Red')
+        actualYellowRegNums = lh.GetRegNumsByColor('Yellow')
+        # Assert
+        self.assertEqual(expectedBlueRegNums,actualBlueRegNums)
+        self.assertEqual(expectedRedRegNums,actualRedRegNums)
+        self.assertEqual([],actualYellowRegNums)
