@@ -6,20 +6,39 @@ class ParkService(ABC):
 
     def __init__(self):
         self.lotHandler = None
+    
+    @property
+    def IsInitialized(self):
+        return self.lotHandler is not None
+    
+    @abstractmethod
+    def allow(self, car, slotNum):
+        pass    
 
     def InitializeParkingLot(self, capacity):
         if self.lotHandler is None:
             self.lotHandler = LotHandler(capacity)
-            return ParkingLotInit.format(capacity)
+            return ParkingLotInit.format(capacity), self.lotHandler
         else:
             raise Exception('Already Initialized Parking Lot')
 
     def CheckCarParkedAlready(self, car):
         return self.lotHandler.IsCarParked(car)
     
-    @abstractmethod
-    def allow(self, car, slotNum):
-        pass
+    def ShowStatus(self):
+         return self.lotHandler.slots
+        
+    def RegNumsByColor(self, color):
+        result = self.lotHandler.GetRegNumsByColor(color)
+        return ', '.join(result)
+    
+    def SlotNumsByColor(self, color):
+        result = self.lotHandler.GetSlotNumsByColor(color)
+        return ', '.join(result)
+    
+    def SlotNumForRegNum(self, regNum):
+        return self.lotHandler.GetSlotNumByRegNum(regNum)
+
         
 
 class EntryService(ParkService):
@@ -37,11 +56,11 @@ class EntryService(ParkService):
             
             # Check car already parked: Invalid input
             if self.lotHandler.IsCarParked(car) == True:
-                raise ValueError(ReparkNotAllowed.format(car.RegNum))
+                return ReparkNotAllowed.format(car.RegNum)
 
             # Get nearest slot
             nearestSlotNum = self.lotHandler.GetNearestSlot()
-
+            
             # check if slot available
             if self.lotHandler.IsSlotAvailable(nearestSlotNum) == False:
                 raise ValueError(SlotUnAvailable)
@@ -65,4 +84,20 @@ class ExitService(ParkService):
     
     def allow(self, slotNum):
         # Allow exit of the car from parking lot
-        pass
+        # Allow entry of the car in parking lot
+        try:
+            
+            if slotNum == None:
+                raise ValueError(InvalidInput)
+
+            # check if slot already free
+            if self.lotHandler.IsSlotAvailable(slotNum) == True:
+                raise ValueError(SlotAlreadyFree.format(slotNum))
+
+            # vaccate the car from the slot
+            self.lotHandler.VaccateSlot(int(slotNum))
+            return SlotFreed.format(slotNum)
+        except ValueError as ve:
+            raise ve
+        except:
+            raise Exception(UnknownErrorOccured)

@@ -107,8 +107,8 @@ class test_lot_handler(unittest.TestCase):
         lh.FillSlot(car3, 3)
         lh.FillSlot(car4, 4)
 
-        expectedBlueSlots = [2,4]
-        expectedRedslots = [3]
+        expectedBlueSlots = ['2','4']
+        expectedRedslots = ['3']
         
 
         # Act
@@ -171,3 +171,25 @@ class test_lot_handler(unittest.TestCase):
         self.assertEqual(expectedBlueRegNums,actualBlueRegNums)
         self.assertEqual(expectedRedRegNums,actualRedRegNums)
         self.assertEqual([],actualYellowRegNums)
+
+
+    def test_get_nearest_slot(self):
+        # Arrange
+        lh = LotHandler(4)
+        car1 = Car('KA-01-HH-1234', 'White')
+        car2 = Car('KA-04-HH-1231', 'Blue')
+        car3 = Car('KA-04-HH-1231', 'Red')
+        car4 = Car('KA-04-HH-1231', 'Blue')
+
+        lh.FillSlot(car1, 1)
+        lh.FillSlot(car2, 2)
+        lh.FillSlot(car3, 3)
+        lh.FillSlot(car4, 4)
+
+        lh.VaccateSlot(2)
+        lh.VaccateSlot(4)
+
+        # Act
+        val = lh.GetNearestSlot()
+        # Assert
+        self.assertEqual(val,2)

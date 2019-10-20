@@ -29,15 +29,16 @@ class LotHandler(object):
     
     def VaccateSlot(self, slotNum):
 
+
         for slot in self.slots:
             if slot.slotNum == slotNum:
                 slot.ParkedCar = None
                 self.freeSlots.append(slotNum)
+                break
 
     def GetNearestSlot(self):
         sNum = min(self.freeSlots)
-        nearestSlot = [slot for slot in self.slots if slot.SlotNum == sNum][0]
-        return nearestSlot
+        return sNum
 
     def IsCarParked(self, car):
         status = False
@@ -45,6 +46,7 @@ class LotHandler(object):
             if slot.IsAvailable == False: # Check only parked slots
                 if slot.ParkedCar is not None:
                     status = slot.ParkedCar.RegNum == car.RegNum
+                    break
         return status
         
 
@@ -62,7 +64,7 @@ class LotHandler(object):
         for slot in self.slots:
             if slot.ParkedCar != None:
                 if str(slot.ParkedCar.Color).lower() == color.lower():
-                    slots.append(slot.SlotNum)
+                    slots.append(str(slot.SlotNum))
         
         return slots
 

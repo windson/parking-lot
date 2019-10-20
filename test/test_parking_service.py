@@ -25,7 +25,7 @@ class park_service_tests(unittest.TestCase):
         s = EntryService()
 
         # Act
-        status = s.InitializeParkingLot(6)
+        status, _ = s.InitializeParkingLot(6)
         
         # Assert
         self.assertEqual(status,'Created a parking lot with 6 slots')
@@ -74,12 +74,10 @@ class park_service_tests(unittest.TestCase):
         s.lotHandler.IsCarParked = MagicMock(return_value = True)
         
         # Act
-        with self.assertRaises(ValueError) as ex:
-            s.allow(car)
+        status = s.allow(car)
         
         # Assert
-        self.assertEqual('Cannot park already Parked Car: {0}'.format(car.RegNum), str(ex.exception))
-
+        self.assertEqual('Cannot park already Parked Car: {0}'.format(car.RegNum), status)
 
 
     def test_allow_slot_unavailable(self):
@@ -120,3 +118,93 @@ class park_service_tests(unittest.TestCase):
         # Assert
         self.assertEqual(status, 'Allocated slot number: {0}'.format(1))
 
+
+
+    def test_allow_exit_handler_initialized(self):
+        # Arrange
+        s = ExitService()
+        
+        # Act
+        status = s.IsInitialized
+        
+        # Assert
+        self.assertFalse(status)
+
+
+    def test_allow_exit_none(self):
+        # Arrange
+        s = ExitService()
+        
+        # Act
+        with self.assertRaises(ValueError) as ex:
+            s.allow(None)
+        
+        # Assert
+        self.assertEqual(InvalidInput, str(ex.exception))
+
+    def test_allow_exit_UnkownError(self):
+        # Arrange
+        s = ExitService()
+        
+        # Act
+        with self.assertRaises(Exception) as ex:
+            s.allow(1)
+        
+        # Assert
+        self.assertEqual(UnknownErrorOccured, str(ex.exception))
+
+    def test_allow_exit_a_already_free_parking_lot(self):
+        # Arrange
+        s = ExitService()
+        s.lotHandler = MagicMock(return_value = object)
+        s.lotHandler.IsSlotAvailable = MagicMock(return_value = True)
+        
+        # Act
+        with self.assertRaises(ValueError) as ex:
+            s.allow(1)
+
+        # Assert
+        self.assertEqual(SlotAlreadyFree.format(1), str(ex.exception))
+      
+
+    def test_allow_exit_vaccate(self):
+        # Arrange
+        s = ExitService()
+        s.lotHandler = MagicMock(return_value = object)
+        s.lotHandler.IsSlotAvailable = MagicMock(return_value = False)
+        
+        # Act
+        status = s.allow(1)
+
+        # Assert
+        self.assertEqual(SlotFreed.format(1), status)
+      
+    def test_Reg_nums_by_color(self):
+        s = EntryService()
+        s.InitializeParkingLot(4)
+        s.lotHandler.GetRegNumsByColor = MagicMock(return_value = ['KA-01-HH-1234', 'KA-01-HH-9999', 'KA-01-P-333'])
+        status = s.RegNumsByColor('Orange')
+        self.assertEqual(status, 'KA-01-HH-1234, KA-01-HH-9999, KA-01-P-333')
+
+    def test_slot_nums_by_color(self):
+        s = EntryService()
+        s.InitializeParkingLot(4)
+        s.lotHandler.GetSlotNumsByColor = MagicMock(return_value = ['2', '4'])
+        status = s.SlotNumsByColor('Red')
+        self.assertEqual(status, '2, 4')
+    
+    def test_slot_fro_reg_num(self):
+        s = EntryService()
+        s.InitializeParkingLot(4)
+        s.lotHandler.GetSlotNumByRegNum = MagicMock(return_value = '2')
+        status = s.SlotNumForRegNum('KA-01-HH-9999')
+        self.assertEqual(status, '2')
+
+    def test_check_car_already_parked(self):
+        s = EntryService()
+        s.InitializeParkingLot(4)
+        s.lotHandler.IsCarParked = MagicMock(return_value = True)
+
+        result = s.CheckCarParkedAlready(Car('KA-01-HH-1234','White'))
+        self.assertTrue(result)
+        
