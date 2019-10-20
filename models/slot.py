@@ -16,3 +16,11 @@ class Slot(object):
     @property
     def ParkedCar(self):
         return self.parkedCar
+    
+    @ParkedCar.setter
+    def ParkedCar(self, value):
+        if value == None:
+            self.isAvailable = True
+        else:
+            self.isAvailable = False
+        self.parkedCar = value
