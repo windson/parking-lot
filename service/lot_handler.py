@@ -58,4 +58,8 @@ class LotHandler(object):
     
     def GetSlotNumsByClor(self, color):
         #slot_numbers_for_cars_with_colour
-    
+        slots = []
+        for slot in self.slots:
+            if slot.ParkedCar != None:
+                if solt.ParkedCar.Color == color:
+                    slots.append(slot.SlotNum)
