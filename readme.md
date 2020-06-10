@@ -1,3 +1,5 @@
+# Parking Lot Problem Solution
+Author: Navule Pavan Kumar Rao
 
 ## Upgrade pip
 python3 -m pip install --upgrade pip
@@ -13,6 +15,12 @@ python3 -m pip install --upgrade pip
 
 ## Install dependencies
 pip install -r requirements.txt
+
+## Generate executable
+
+pyinstaller parking_lot.py
+
+### copy the contents of the generate dist/parking_lot directory to the gojek provided bin directory and read the instructions mentioned in How to run.md
 
 # How to Run
 ## Mode: file_input.txt

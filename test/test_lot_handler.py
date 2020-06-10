@@ -81,6 +81,20 @@ class test_lot_handler(unittest.TestCase):
         self.assertTrue(slotNumToVaccate in lh.freeSlots)
         self.assertTrue(2 not in lh.freeSlots)
     
+    def test_vaccate_slot_not_present(self):
+        # Arrange
+        lh = LotHandler(2)
+        firstCar = Car('KA-01-HH-1234', 'White')
+        secondCar = Car('KA-01-BB-0001', 'Red')
+        
+        lh.FillSlot(firstCar, 1)
+        lh.FillSlot(secondCar, 2)
+
+        slotNumToVaccate = 3
+        with self.assertRaises(ValueError) as ex:
+            lh.VaccateSlot(slotNumToVaccate)
+        self.assertEqual(ex.exception, 'No such Slot Number found in Parking lots')
+    
     def test_is_slot_available(self):
         # Arrange
         lh = LotHandler(2)

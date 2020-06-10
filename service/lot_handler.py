@@ -29,7 +29,8 @@ class LotHandler(object):
     
     def VaccateSlot(self, slotNum):
 
-
+        if slotNum > self.capacity:
+            raise ValueError('No such Slot Number found in Parking lot')
         for slot in self.slots:
             if slot.slotNum == slotNum:
                 slot.ParkedCar = None

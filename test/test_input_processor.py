@@ -390,7 +390,7 @@ class test_input_processor(unittest.TestCase):
         inp ='park KA-01-HH-9999 Red'
         s.process(inp)
 
-        inp ='leave 3'
+        inp ='leave 2'
         s.process(inp)
         inp ='leave 1'
         s.process(inp)
