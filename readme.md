@@ -53,6 +53,7 @@ Run `coverage run parking_lot.py` and play with edge cases
 
 `coverage report -m`
 
+```
 Name                      Stmts   Miss  Cover   Missing
 -------------------------------------------------------
 input_processor.py           90     19    79%   29-32, 35-43, 53, 62, 92, 98, 123, 127-128
@@ -67,6 +68,7 @@ util/__init__.py              0      0   100%
 util/constants.py            14      0   100%
 -------------------------------------------------------
 TOTAL                       266     42    84%
+```
 
 ## Generate HTML Code coverage Report
 `coverage html -d coverage_html`
